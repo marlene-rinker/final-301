@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Pokemon</title>
+</head>
+<body>
+  <h1>These are the Pokemon.</h1>
+  <ul>
+    <% arrayOfPokemon.forEach(val => { %>
+      <form action="/add" method="POST">
+        <h2><%= val %></h2>
+        <input type=hidden name="pokemon" value=<%= val %>>
+        <button type="submit" value="Add to Favorites">Add to Favorites</button>
+      </form>
+    <% }) %>
+
+  </ul>
+</body>
+</html>
