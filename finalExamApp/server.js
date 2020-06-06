@@ -25,6 +25,7 @@ client.connect();
 // routes
 app.get('/', getPokemon);
 app.post('/add', addPokemon);
+app.get('/favorites', showFavorites);
 
 // functions
 function Pokemon(obj){
@@ -36,14 +37,12 @@ function getPokemon(req, res){
   superagent.get(url)
     .query()
     .then(result => {
-      // console.log('result',result)
       const characters = [];
       
       for (let i = 0; i <result.body.results.length; i++){
         let pokemon = new Pokemon(result.body.results[i]);
         characters.push(pokemon.name);
       }
-      // console.log(characters.sort());
       res.render('pages/searches/show', {arrayOfPokemon : characters.sort()})  
     })
 
@@ -52,13 +51,24 @@ function getPokemon(req, res){
 function addPokemon(req, res){
   const sqlQuery = 'INSERT INTO pokemon (name) VALUES ($1)';
   const sqlValues = [req.body.pokemon];
-  console.log(req.body.pokemon);
   client.query(sqlQuery, sqlValues)
     .then(() => {
       res.redirect('/')
     })
     .catch(error => {
       console.log(error);
+    })
+
+}
+
+function showFavorites(req, res){
+  const sqlQuery = 'SELECT * FROM pokemon';
+  client.query(sqlQuery)
+    .then (resultFromSql => {
+      res.render('pages/searches/favorites', { list: resultFromSql.rows});
+    })
+    .catch(error => {
+      console.log(error)
     })
 
 }
